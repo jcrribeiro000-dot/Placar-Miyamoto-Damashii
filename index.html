@@ -3,329 +3,384 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Placar Miyamoto Damashii - v1.1</title>
+    <title>Placar Miyamoto Damashii - v1.4</title>
     <style>
         :root {
-            --bg-color: #0b0c10;
-            --panel-bg: #1f2833;
-            --aka-color: #ff2a2a;
-            --aka-bg: #3d0c0c;
+            --bg-color: #08090c;
+            --panel-bg: #141a22;
+            --aka-color: #ff3333;
+            --aka-bg: #2a0808;
             --shiro-color: #ffffff;
-            --shiro-bg: #2a343d;
+            --shiro-bg: #18222d;
             --text-gold: #ffcc00;
         }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: white;
-            margin: 0;
-            padding: 20px;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            padding: 10px;
+            overflow: hidden;
         }
 
+        /* HEADER & CONTROLES DO TEMPO NA PARTE SUPERIOR */
         header {
-            text-align: center;
-            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            background-color: var(--panel-bg);
+            padding: 8px 20px;
+            border-radius: 10px;
+            border: 1px solid #2a3440;
+            margin-bottom: 10px;
         }
 
-        header h1 {
-            margin: 0;
-            font-size: 3rem;
-            letter-spacing: 3px;
+        .header-title {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .header-title h1 {
+            font-size: 1.3rem;
+            letter-spacing: 2px;
             color: var(--text-gold);
             text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(255, 204, 0, 0.4);
         }
 
         .version-badge {
-            font-size: 1rem;
-            color: #aaa;
-            margin-top: 5px;
+            font-size: 0.75rem;
+            color: #888;
             font-weight: bold;
         }
 
-        /* Layout do Placar */
-        .scoreboard {
-            display: grid;
-            grid-template-columns: 1fr 340px 1fr;
+        /* SEÇÃO DO CRONÔMETRO CENTRALIZADO E EXPANDIDO */
+        .top-timer-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             gap: 20px;
-            width: 100%;
-            max-width: 1300px;
-            margin-bottom: 20px;
         }
 
-        .competitor-card {
-            border-radius: 16px;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.7);
-            position: relative;
-        }
-
-        /* Destaques para Aka e Shiro */
-        .aka-side {
-            background-color: var(--aka-bg);
-            border: 4px solid var(--aka-color);
-            box-shadow: 0 0 20px rgba(255, 42, 42, 0.3);
-        }
-
-        .shiro-side {
-            background-color: var(--shiro-bg);
-            border: 4px solid var(--shiro-color);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-        }
-
-        .side-label {
-            font-size: 2.2rem;
-            font-weight: 900;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .aka-side .side-label { 
-            color: var(--aka-color); 
-            text-shadow: 0 0 8px rgba(255, 42, 42, 0.6);
-        }
-        .shiro-side .side-label { 
-            color: var(--shiro-color); 
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
-        }
-
-        /* Nome do Atleta em grande destaque */
-        .competitor-card input[type="text"] {
-            width: 95%;
-            padding: 12px;
-            font-size: 1.8rem;
-            font-weight: 800;
-            text-align: center;
-            border: 2px solid #555;
-            border-radius: 8px;
-            background: #0f141c;
-            color: #ffffff;
-            margin-bottom: 20px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
-        }
-
-        .competitor-card input[type="text"]:focus {
-            outline: none;
-            border-color: var(--text-gold);
-        }
-
-        /* Contadores de Pontuação e Faltas */
-        .section-title {
-            font-size: 1.1rem;
-            color: #ddd;
-            text-transform: uppercase;
-            margin-top: 15px;
-            margin-bottom: 8px;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .btn {
-            padding: 12px 18px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-
-        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
-        .btn:active { transform: translateY(0); }
-
-        .btn-wazari { background-color: #ff9800; color: black; }
-        .btn-ippon { background-color: #e53935; color: white; }
-        .btn-chui { background-color: #fbc02d; color: black; }
-        .btn-genten { background-color: #d32f2f; color: white; }
-
-        /* Placa de pontuação */
-        .display-box {
-            font-size: 2.2rem;
-            font-weight: 900;
-            background: #000;
-            padding: 12px 20px;
-            border-radius: 8px;
-            width: 90%;
-            text-align: center;
-            min-height: 45px;
-            border: 2px solid #444;
-            letter-spacing: 1px;
-        }
-
-        /* Seção Central (Cronômetro) */
-        .timer-card {
-            background-color: var(--panel-bg);
-            border-radius: 16px;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.7);
-            border: 2px solid #3a4750;
-        }
-
-        /* Cronômetro com máximo destaque */
         .timer-display {
             font-family: 'Courier New', Courier, monospace;
-            font-size: 5rem;
+            font-size: 3.8rem;
             font-weight: 900;
             color: var(--text-gold);
             background: #000000;
-            padding: 15px 25px;
-            border-radius: 12px;
+            padding: 0px 22px;
+            border-radius: 8px;
             border: 3px solid var(--text-gold);
-            margin: 15px 0;
-            box-shadow: 0 0 15px rgba(255, 204, 0, 0.3);
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
             letter-spacing: 2px;
+            line-height: 1.1;
         }
 
-        .timer-inputs {
+        .timer-controls-compact {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-compact {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.15s ease;
+        }
+
+        .btn-compact:hover { opacity: 0.9; }
+
+        .btn-start { background-color: #2e7d32; color: white; }
+        .btn-pause { background-color: #ed6c02; color: white; }
+        .btn-reset { background-color: #424242; color: white; }
+
+        .timer-inputs-compact {
             display: flex;
             align-items: center;
-            gap: 6px;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
+            gap: 4px;
+            font-size: 0.8rem;
+            color: #ccc;
         }
 
-        .timer-inputs input {
-            width: 55px;
-            padding: 8px;
-            font-size: 1.1rem;
+        .timer-inputs-compact input {
+            width: 42px;
+            padding: 3px 4px;
+            font-size: 0.85rem;
             font-weight: bold;
             text-align: center;
             background: #0f141c;
             border: 1px solid #555;
             color: white;
-            border-radius: 6px;
+            border-radius: 4px;
         }
 
-        .controls {
-            display: flex;
-            flex-direction: column;
+        .elapsed-compact {
+            font-size: 0.9rem;
+            color: #aaa;
+            text-align: right;
+            justify-self: end;
+        }
+
+        .elapsed-compact strong {
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+        /* LAYOUT PRINCIPAL (SHIRO X AKA OCUPANDO 100% DA ÁREA ÚTIL) */
+        .scoreboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 12px;
+            flex: 1;
             width: 100%;
         }
 
-        .btn-start { background-color: #2e7d32; color: white; width: 100%; font-size: 1.2rem; }
-        .btn-pause { background-color: #ed6c02; color: white; width: 100%; font-size: 1.2rem; }
-        .btn-reset { background-color: #616161; color: white; width: 100%; font-size: 1rem; }
+        .competitor-card {
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.7);
+        }
 
-        .match-duration {
-            font-size: 1rem;
-            color: #ccc;
-            margin-top: 15px;
+        /* SHIRO (ESQUERDA) E AKA (DIREITA) */
+        .shiro-side {
+            background-color: var(--shiro-bg);
+            border: 5px solid var(--shiro-color);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
+        }
+
+        .aka-side {
+            background-color: var(--aka-bg);
+            border: 5px solid var(--aka-color);
+            box-shadow: 0 0 25px rgba(255, 51, 51, 0.25);
+        }
+
+        .side-label {
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            line-height: 1;
+        }
+
+        .shiro-side .side-label { 
+            color: var(--shiro-color); 
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+        }
+        .aka-side .side-label { 
+            color: var(--aka-color); 
+            text-shadow: 0 0 12px rgba(255, 51, 51, 0.8);
+        }
+
+        .competitor-card input[type="text"] {
+            width: 100%;
+            padding: 6px;
+            font-size: 2.2rem;
+            font-weight: 900;
+            text-align: center;
+            border: 2px solid #555;
+            border-radius: 8px;
+            background: #0f141c;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+
+        /* DISPLAYS MAXIMIZADOS PARA VISUALIZAÇÃO A 6M+ */
+        .display-section {
+            width: 100%;
             text-align: center;
         }
 
-        .match-duration strong {
-            font-size: 1.5rem;
-            color: #fff;
+        .section-label {
+            font-size: 1.3rem;
+            color: #bbb;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 4px;
         }
+
+        .score-box {
+            font-size: 5.5rem;
+            font-weight: 900;
+            background: #000000;
+            color: #ffffff;
+            padding: 10px;
+            border-radius: 12px;
+            width: 100%;
+            text-align: center;
+            border: 3px solid #444;
+            line-height: 1;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 0 0 10px rgba(255,255,255,0.2);
+        }
+
+        .foul-box {
+            font-size: 3.2rem;
+            font-weight: 900;
+            background: #000000;
+            color: #ff4444;
+            padding: 8px;
+            border-radius: 12px;
+            width: 100%;
+            text-align: center;
+            border: 3px solid #444;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* BOTÕES OPERACIONAIS */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            margin-top: 6px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px 5px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-transform: uppercase;
+        }
+
+        .btn:hover { opacity: 0.9; transform: scale(1.02); }
+        .btn:active { transform: scale(0.98); }
+
+        .btn-wazari { background-color: #ff9800; color: #000; }
+        .btn-ippon { background-color: #e53935; color: #fff; }
+        .btn-chui { background-color: #fbc02d; color: #000; }
+        .btn-genten { background-color: #b71c1c; color: #fff; }
+        .btn-clear { background-color: #3a4750; color: #fff; font-size: 0.8rem; padding: 6px; width: 100%; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Miyamoto Damashii</h1>
-        <div class="version-badge">Placar Oficial - Versão 1.1</div>
+        <div class="header-title">
+            <h1>Miyamoto Damashii</h1>
+            <div class="version-badge">Placar Oficial - v1.4</div>
+        </div>
+
+        <div class="top-timer-section">
+            <div class="timer-display" id="timer-display">03:00</div>
+            
+            <div class="timer-controls-compact">
+                <div class="btn-row">
+                    <button class="btn-compact btn-start" onclick="startTimer()">Iniciar</button>
+                    <button class="btn-compact btn-pause" onclick="pauseTimer()">Pausar</button>
+                    <button class="btn-compact btn-reset" onclick="resetTimer()">Reset</button>
+                </div>
+                <div class="timer-inputs-compact">
+                    <input type="number" id="input-min" value="3" min="0" max="59">m
+                    <input type="number" id="input-sec" value="0" min="0" max="59">s
+                    <button class="btn-compact" style="background:#3a4750; color:white; padding:3px 8px;" onclick="setCustomTime()">OK</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="elapsed-compact">
+            Decorrido:<br><strong id="elapsed-display">00:00</strong>
+        </div>
     </header>
 
     <div class="scoreboard">
-        <!-- AKA (Vermelho) -->
-        <div class="competitor-card aka-side">
-            <div class="side-label">AKA (赤)</div>
-            <input type="text" id="aka-name" placeholder="Nome do Atleta (Aka)" value="Atleta Aka">
-            
-            <div class="section-title">Pontuação</div>
-            <div class="btn-group">
-                <button class="btn btn-wazari" onclick="addScore('aka', 'wazari')">Waza-ari</button>
-                <button class="btn btn-ippon" onclick="addScore('aka', 'ippon')">Ippon</button>
-            </div>
-            <div class="display-box" id="aka-score-display">---</div>
-
-            <div class="section-title">Penalidades (Faltas)</div>
-            <div class="btn-group">
-                <button class="btn btn-chui" onclick="addFoul('aka', 'chui')">Chui</button>
-                <button class="btn btn-genten" onclick="addFoul('aka', 'genten')">Genten</button>
-            </div>
-            <div class="display-box" id="aka-foul-display" style="font-size: 1.4rem;">Nenhuma</div>
-
-            <button class="btn btn-reset" style="margin-top: 20px; font-size: 0.85rem;" onclick="resetCompetitor('aka')">Limpar Aka</button>
-        </div>
-
-        <!-- CRONÔMETRO CENTRAL -->
-        <div class="timer-card">
-            <div class="section-title" style="font-size: 1.3rem; color: #fff;">Tempo de Luta</div>
-            <div class="timer-display" id="timer-display">03:00</div>
-
-            <div class="timer-inputs">
-                <label>Ajustar:</label>
-                <input type="number" id="input-min" value="3" min="0" max="59"> m
-                <input type="number" id="input-sec" value="0" min="0" max="59"> s
-                <button class="btn" style="background:#3a4750; color:white; padding:8px 12px;" onclick="setCustomTime()">OK</button>
-            </div>
-
-            <div class="controls">
-                <button class="btn btn-start" onclick="startTimer()">Iniciar</button>
-                <button class="btn btn-pause" onclick="pauseTimer()">Pausar</button>
-                <button class="btn btn-reset" onclick="resetTimer()">Reiniciar Cronômetro</button>
-            </div>
-
-            <div class="match-duration">
-                Tempo Decorrido: <br><strong id="elapsed-display">00:00</strong>
-            </div>
-        </div>
-
-        <!-- SHIRO (Branco) -->
+        <!-- SHIRO (BRANCO) - ESQUERDA -->
         <div class="competitor-card shiro-side">
             <div class="side-label">SHIRO (白)</div>
-            <input type="text" id="shiro-name" placeholder="Nome do Atleta (Shiro)" value="Atleta Shiro">
+            <input type="text" id="shiro-name" placeholder="Nome do Atleta" value="Atleta Shiro">
             
-            <div class="section-title">Pontuação</div>
-            <div class="btn-group">
-                <button class="btn btn-wazari" onclick="addScore('shiro', 'wazari')">Waza-ari</button>
-                <button class="btn btn-ippon" onclick="addScore('shiro', 'ippon')">Ippon</button>
+            <div class="display-section">
+                <div class="section-label">Pontuação</div>
+                <div class="score-box" id="shiro-score-display">---</div>
+                <div class="btn-group">
+                    <button class="btn btn-wazari" onclick="addScore('shiro', 'wazari')">Waza-ari</button>
+                    <button class="btn btn-ippon" onclick="addScore('shiro', 'ippon')">Ippon</button>
+                </div>
             </div>
-            <div class="display-box" id="shiro-score-display">---</div>
 
-            <div class="section-title">Penalidades (Faltas)</div>
-            <div class="btn-group">
-                <button class="btn btn-chui" onclick="addFoul('shiro', 'chui')">Chui</button>
-                <button class="btn btn-genten" onclick="addFoul('shiro', 'genten')">Genten</button>
+            <div class="display-section">
+                <div class="section-label">Penalidades</div>
+                <div class="foul-box" id="shiro-foul-display">NENHUMA</div>
+                <div class="btn-group">
+                    <button class="btn btn-chui" onclick="addFoul('shiro', 'chui')">Chui</button>
+                    <button class="btn btn-genten" onclick="addFoul('shiro', 'genten')">Genten</button>
+                </div>
             </div>
-            <div class="display-box" id="shiro-foul-display" style="font-size: 1.4rem;">Nenhuma</div>
 
-            <button class="btn btn-reset" style="margin-top: 20px; font-size: 0.85rem;" onclick="resetCompetitor('shiro')">Limpar Shiro</button>
+            <button class="btn btn-clear" onclick="resetCompetitor('shiro')">Limpar Shiro</button>
+        </div>
+
+        <!-- AKA (VERMELHO) - DIREITA -->
+        <div class="competitor-card aka-side">
+            <div class="side-label">AKA (赤)</div>
+            <input type="text" id="aka-name" placeholder="Nome do Atleta" value="Atleta Aka">
+            
+            <div class="display-section">
+                <div class="section-label">Pontuação</div>
+                <div class="score-box" id="aka-score-display">---</div>
+                <div class="btn-group">
+                    <button class="btn btn-wazari" onclick="addScore('aka', 'wazari')">Waza-ari</button>
+                    <button class="btn btn-ippon" onclick="addScore('aka', 'ippon')">Ippon</button>
+                </div>
+            </div>
+
+            <div class="display-section">
+                <div class="section-label">Penalidades</div>
+                <div class="foul-box" id="aka-foul-display">NENHUMA</div>
+                <div class="btn-group">
+                    <button class="btn btn-chui" onclick="addFoul('aka', 'chui')">Chui</button>
+                    <button class="btn btn-genten" onclick="addFoul('aka', 'genten')">Genten</button>
+                </div>
+            </div>
+
+            <button class="btn btn-clear" onclick="resetCompetitor('aka')">Limpar Aka</button>
         </div>
     </div>
 
     <script>
-        // Estado da aplicação - Versão 1.1
+        // Estado da aplicação - Versão 1.4
         let timerInterval = null;
-        let totalSeconds = 180; // 3 minutos padrão
+        let totalSeconds = 180;
         let initialSeconds = 180;
         let elapsedSeconds = 0;
         let isRunning = false;
 
         const state = {
-            aka: { wazari: 0, ippon: 0, chui: 0, genten: 0 },
-            shiro: { wazari: 0, ippon: 0, chui: 0, genten: 0 }
+            shiro: { wazari: 0, ippon: 0, chui: 0, genten: 0 },
+            aka: { wazari: 0, ippon: 0, chui: 0, genten: 0 }
         };
 
         // Funções do Cronômetro
@@ -408,23 +463,29 @@
             // Render Pontos
             const scoreDisplay = document.getElementById(`${side}-score-display`);
             if (state[side].ippon > 0) {
-                scoreDisplay.innerText = "IPPON!";
-                scoreDisplay.style.color = "#ff2a2a";
+                scoreDisplay.innerText = "IPPON";
+                scoreDisplay.style.color = "#ff3333";
             } else if (state[side].wazari > 0) {
                 scoreDisplay.innerText = `WAZA-ARI (${state[side].wazari})`;
                 scoreDisplay.style.color = "#ff9800";
             } else {
                 scoreDisplay.innerText = "---";
-                scoreDisplay.style.color = "white";
+                scoreDisplay.style.color = "#ffffff";
             }
 
             // Render Faltas
             const foulDisplay = document.getElementById(`${side}-foul-display`);
             let foulText = [];
-            if (state[side].genten > 0) foulText.push(`Genten ${state[side].genten}`);
-            if (state[side].chui > 0) foulText.push(`Chui ${state[side].chui}`);
+            if (state[side].genten > 0) foulText.push(`GENTEN ${state[side].genten}`);
+            if (state[side].chui > 0) foulText.push(`CHUI ${state[side].chui}`);
             
-            foulDisplay.innerText = foulText.length > 0 ? foulText.join(" | ") : "Nenhuma";
+            if (foulText.length > 0) {
+                foulDisplay.innerText = foulText.join(" | ");
+                foulDisplay.style.color = "#ff4444";
+            } else {
+                foulDisplay.innerText = "NENHUMA";
+                foulDisplay.style.color = "#555555";
+            }
         }
 
         function resetCompetitor(side) {
